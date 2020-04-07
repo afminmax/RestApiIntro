@@ -9,18 +9,45 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // ------------------------- MONGODB DECLARATIONS ------------------------------------ //
-// mongoose.connect('mongodb+srv://****:*****@*****.mongodb.net/blogDB', {
-//   useNewUrlParser: true
-// });
+mongoose.connect('mongodb://localhost:27017/wikiDB', {
+  useNewUrlParser: true,
+});
 
-// const wikiSchema = new mongoose.Schema({
-//   name: String,
-//   content: String
-// });
+const articleSchema = new mongoose.Schema({
+  title: String,
+  content: String,
+});
 
-// const Wiki = mongoose.model('Wiki', wikiSchema);
+const Article = mongoose.model('Article', articleSchema);
 // ------------------------- MONGODB DECLARATIONS ------------------------------------ //
 
+//HTTP Verb "GET" - will fetch all the articles
+app.get('/articles', function (req, res) {
+  Article.find({}, function (err, foundArticles) {
+    if (!err) {
+      res.send(foundArticles);
+    } else {
+      res.send(err);
+    }
+  });
+});
+
+app.post('/articles', function (req, res) {
+  console.log(req.body.title);
+  console.log(req.body.content);
+
+  const newArticle = new Article({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  newArticle.save(function (err) {
+    if (!err) {
+      res.send('successful article load.');
+    } else {
+      res.send(err);
+    }
+  });
+});
 app.listen(3000, function () {
   console.log('...server has started on port 3000');
 });
