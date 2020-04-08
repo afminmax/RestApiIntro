@@ -116,6 +116,7 @@ app
     });
   })
   .put(function (req, res) {
+    //PUT replaces everything! all fields!
     Article.update(
       { title: req.params.articleTitle }, //the condition
       { title: req.body.title, content: req.body.content }, // what to change
@@ -128,6 +129,31 @@ app
         }
       }
     );
+  })
+  .patch(function (req, res) {
+    Article.update(
+      { title: req.params.articleTitle },
+      { $set: req.body },
+      function (err, results) {
+        if (!err) {
+          res.send('article updated successfully');
+        } else {
+          res.send('there was an error');
+        }
+      }
+    );
+  })
+  .delete(function (req, res) {
+    Article.deleteOne({ title: req.params.articleTitle }, function (
+      err,
+      results
+    ) {
+      if (!err) {
+        res.send('article deleted successfully');
+      } else {
+        res.send('there was an error');
+      }
+    });
   });
 
 app.listen(3000, function () {
