@@ -32,6 +32,7 @@ app.get('/articles', function (req, res) {
   });
 });
 
+//HTTP Verb "POST" - will add another article to the database
 app.post('/articles', function (req, res) {
   console.log(req.body.title);
   console.log(req.body.content);
@@ -48,6 +49,18 @@ app.post('/articles', function (req, res) {
     }
   });
 });
+
+//HTTP Verb "DELETE" - will fetch all the articles
+app.delete('/articles', function (req, res) {
+  Article.deleteMany(function (err) {
+    if (!err) {
+      res.send('successfully deleted all articles');
+    } else {
+      res.send(err);
+    }
+  });
+});
+
 app.listen(3000, function () {
   console.log('...server has started on port 3000');
 });
