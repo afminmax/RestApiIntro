@@ -101,18 +101,34 @@ app
 
 // ExpressJS Route Chaining for GET, POST and DELETE on specific Articles using Express route parameters
 
-app.route('/articles/:articleTitle').get(function (req, res) {
-  Article.findOne({ title: req.params.articleTitle }, function (
-    err,
-    foundArticle
-  ) {
-    if (foundArticle) {
-      res.send(foundArticle);
-    } else {
-      res.send('No articles with that title found');
-    }
+app
+  .route('/articles/:articleTitle')
+  .get(function (req, res) {
+    Article.findOne({ title: req.params.articleTitle }, function (
+      err,
+      foundArticle
+    ) {
+      if (foundArticle) {
+        res.send(foundArticle);
+      } else {
+        res.send('No articles with that title found');
+      }
+    });
+  })
+  .put(function (req, res) {
+    Article.update(
+      { title: req.params.articleTitle }, //the condition
+      { title: req.body.title, content: req.body.content }, // what to change
+      { overwrite: true },
+      function (err, results) {
+        if (!err) {
+          res.send('article update successfully');
+        } else {
+          res.send('there was an error');
+        }
+      }
+    );
   });
-});
 
 app.listen(3000, function () {
   console.log('...server has started on port 3000');
